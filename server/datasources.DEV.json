@@ -1,7 +1,12 @@
 {
-  "db": {
-    "name": "db",
-    "connector": "memory"
+  "mongodb_dev": {
+    "host": "mongo",
+    "port": 27017,
+    "database": "mongo-db1",
+    "username": "admin",
+    "password": "",
+    "name": "mongodb_dev",
+    "connector": "mongodb"
   },
   "userService": {
     "connector": "rest",
@@ -9,7 +14,7 @@
     "operations": [{
       "template": {
         "method": "GET",
-        "url": "http://localhost:3000/api/SITUsers/{userId}/accessTokens/{token}",
+        "url": "http://devprojetm2gla.istic.univ-rennes1.fr/api/SITUsers/{userId}/accessTokens/{token}",
         "headers": {
           "accepts": "application/json",
           "content-type": "application/json",
