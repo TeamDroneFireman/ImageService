@@ -1,0 +1,34 @@
+{
+  "name": "Image",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "position": {
+      "type": "object",
+      "required": true
+    },
+    "drone": {
+      "type": "string",
+      "required": true
+    },
+    "intervention": {
+      "type": "string",
+      "required": true
+    },
+    "takenAt": {
+      "type": "date",
+      "required": true
+    },
+    "link": {
+      "type": "string",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}
