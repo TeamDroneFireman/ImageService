@@ -4,12 +4,13 @@ module.exports = function(Image) {
   Image.disableRemoteMethod('updateAll', true);
   Image.disableRemoteMethod('createChangeStream', true);
 
-  Image.uploadImage = function (req, drone, intervention, position, takenAt, cb) {
+  Image.uploadImage = function (req, drone, intervention, 
+                                position, takenAt, cb) {
     var imageStore = Image.app.models.ImageStore;
     imageStore.upload(drone,req, function(err,data){
       if (err) throw err;
       if (data.error)
-        next('> response error: ' + response.error.stack);
+        next('> response error: ' + err.error.stack);
       var img = {
         'intervention' : intervention,
         'drone' : drone,
@@ -20,7 +21,7 @@ module.exports = function(Image) {
       Image.create(img, function(err,data){
         if (err) throw err;
         if (data.error)
-          next('> response error: ' + response.error.stack);
+          next('> response error: ' + err.error.stack);
         cb(null,data);
       });
     });
