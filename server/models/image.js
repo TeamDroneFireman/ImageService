@@ -2,9 +2,16 @@ module.exports = function(Image) {
 
   Image.disableRemoteMethod('deleteById', true);
   Image.disableRemoteMethod('updateAll', true);
+  Image.disableRemoteMethod('findOne', true);
+  Image.disableRemoteMethod('findById', true);
+  Image.disableRemoteMethod('exists', true);
   Image.disableRemoteMethod('createChangeStream', true);
+  Image.disableRemoteMethod('count', true);
+  Image.disableRemoteMethod('upsert', true);
+  Image.disableRemoteMethod('find', true);
+  Image.disableRemoteMethod('prototype.updateAttributes', true);
 
-  Image.uploadImage = function (req, drone, intervention, 
+  Image.uploadImage = function (req, drone, intervention,
                                 position, takenAt, cb) {
     var imageStore = Image.app.models.ImageStore;
     imageStore.upload(drone,req, function(err,data){
@@ -26,6 +33,25 @@ module.exports = function(Image) {
       });
     });
   };
+
+  Image.findByInterventionAndPosition = function (id,lat,lng,cb) {
+    Image.find({ where: {intervention: id}}, function(err, Images) {
+      var data = Images.filter(function(image) {
+        return image.position.lat === lat && image.position.lng === lng;
+      });
+      cb(null, data);
+    });
+  };
+
+  Image.remoteMethod('findByInterventionAndPosition', {
+    accepts: [
+      {arg: 'id', type: 'string', required: true},
+      { arg: 'lat', type: 'string', http: { source: 'query' } },
+      { arg: 'lng', type: 'string', http: { source: 'query' } }
+    ],
+    returns: {type: 'array', root: true},
+    http: {verb: 'get', path: '/intervention/:id'}
+  });
 
   Image.remoteMethod('uploadImage', {
     accepts: [
