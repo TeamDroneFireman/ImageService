@@ -12,5 +12,13 @@
       "../common/mixins",
       "./mixins"
     ]
+  },
+  "Image": {
+    "dataSource": "db",
+    "public": true
+  },
+  "ImageStore": {
+    "dataSource": "gridfs",
+    "public": true
   }
 }

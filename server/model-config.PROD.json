@@ -12,5 +12,13 @@
       "../common/mixins",
       "./mixins"
     ]
+  },
+  "Image": {
+    "dataSource": "mongo_prod",
+    "public": true
+  },
+  "ImageStore": {
+    "dataSource": "gridfs",
+    "public": true
   }
 }

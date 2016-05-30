@@ -25,5 +25,12 @@
         "checkAuth": ["userId", "token"]
       }
     }]
+  },
+  "gridfs": {
+    "host": "mongo",
+    "port": 27017,
+    "database": "mongo-db1",
+    "name": "gridfs",
+    "connector": "loopback-component-storage-gridfs"
   }
 }
