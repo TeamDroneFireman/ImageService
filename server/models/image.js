@@ -12,7 +12,7 @@ module.exports = function(Image) {
   Image.disableRemoteMethod('prototype.updateAttributes', true);
 
   Image.uploadImage = function (req, drone, intervention,
-                                position, takenAt, cb) {
+                                latitude,longitude, takenAt, cb) {
     var imageStore = Image.app.models.ImageStore;
     imageStore.upload(drone,req, function(err,data){
       if (err) throw err;
@@ -21,7 +21,11 @@ module.exports = function(Image) {
       var img = {
         'intervention' : intervention,
         'drone' : drone,
-        'position' : position,
+        'geoPoint' : {
+          longitude: longitude,
+          latitude: latitude,
+          altitude: 0
+        },
         'takenAt' : takenAt,
         'link' : '/api/ImageStores/'+drone+'/download/'+data._id
       };
@@ -34,10 +38,11 @@ module.exports = function(Image) {
     });
   };
 
-  Image.findByInterventionAndPosition = function (id,lat,lng,cb) {
+  Image.findByInterventionAndPosition = function (id,latitude,longitude,cb) {
     Image.find({ where: {intervention: id}}, function(err, Images) {
       var data = Images.filter(function(image) {
-        return image.position.lat === lat && image.position.lng === lng;
+        return image.geoPoint.latitude === latitude &&
+          image.geoPoint.longitude === longitude;
       });
       cb(null, data);
     });
@@ -46,8 +51,8 @@ module.exports = function(Image) {
   Image.remoteMethod('findByInterventionAndPosition', {
     accepts: [
       {arg: 'id', type: 'string', required: true},
-      { arg: 'lat', type: 'string', http: { source: 'query' } },
-      { arg: 'lng', type: 'string', http: { source: 'query' } }
+      { arg: 'latitude', type: 'string', http: { source: 'query' } },
+      { arg: 'longitude', type: 'string', http: { source: 'query' } }
     ],
     returns: {type: 'array', root: true},
     http: {verb: 'get', path: '/intervention/:id'}
@@ -57,7 +62,9 @@ module.exports = function(Image) {
     accepts: [
       { arg: 'req', type: 'object', http: { source: 'req' } },
       { arg: 'drone', type: 'string', http: { source: 'query' } },
-      { arg: 'position', type: 'object', http: { source: 'query' } },
+      { arg: 'intervention', type: 'string', http: { source: 'query' } },
+      { arg: 'latitude', type: 'string', http: { source: 'query' } },
+      { arg: 'longitude', type: 'string', http: { source: 'query' } },
       { arg: 'takenAt', type: 'date', http: { source: 'query' } }
     ],
     returns: {type: 'object', root: true},

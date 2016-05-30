@@ -6,7 +6,7 @@
     "validateUpsert": true
   },
   "properties": {
-    "position": {
+    "geoPoint": {
       "type": "object",
       "required": true
     },

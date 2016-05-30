@@ -19,6 +19,6 @@
   },
   "ImageStore": {
     "dataSource": "gridfs",
-    "public": false
+    "public": true
   }
 }
