@@ -12,7 +12,7 @@ module.exports = function(Image) {
   Image.disableRemoteMethod('prototype.updateAttributes', true);
 
   Image.uploadImage = function (req, drone, intervention,
-                                latitude,longitude, takenAt, cb) {
+                                latitude, longitude, takenAt, cb) {
     var imageStore = Image.app.models.ImageStore;
     imageStore.upload(drone,req, function(err,data){
       if (err) throw err;
@@ -48,6 +48,12 @@ module.exports = function(Image) {
     });
   };
 
+  Image.getByIntervention = function(id, cb) {
+    Image.find({ where: {intervention: id}}, function(err, Images) {
+      cb(null, Images);
+    });
+  };
+  
   Image.remoteMethod('findByInterventionAndPosition', {
     accepts: [
       {arg: 'id', type: 'string', required: true},
@@ -58,6 +64,26 @@ module.exports = function(Image) {
     http: {verb: 'get', path: '/intervention/:id'}
   });
 
+  Image.remoteMethod('getByIntervention', {
+      http: {path: '/intervention/:id', verb: 'get'},
+      accepts: {arg: 'id', type: 'string', required: true},
+      returns: {type: 'array', root: true},
+      rest: {after: convertNullToNotFoundError}
+    }
+  );
+
+  function convertNullToNotFoundError(ctx, cb) {
+    if (ctx.result !== null) return cb();
+
+    var modelName = ctx.method.sharedClass.name;
+    var id = ctx.getArgByName('id');
+    var msg = 'Unknown "' + modelName + '" id "' + id + '".';
+    var error = new Error(msg);
+    error.statusCode = error.status = 404;
+    error.code = 'MODEL_NOT_FOUND';
+    cb(error);
+  }
+  
   Image.remoteMethod('uploadImage', {
     accepts: [
       { arg: 'req', type: 'object', http: { source: 'req' } },
