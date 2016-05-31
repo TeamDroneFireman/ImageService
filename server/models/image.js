@@ -53,7 +53,7 @@ module.exports = function(Image) {
       cb(null, Images);
     });
   };
-  
+
   Image.remoteMethod('findByInterventionAndPosition', {
     accepts: [
       {arg: 'id', type: 'string', required: true},
@@ -61,7 +61,7 @@ module.exports = function(Image) {
       { arg: 'longitude', type: 'string', http: { source: 'query' } }
     ],
     returns: {type: 'array', root: true},
-    http: {verb: 'get', path: '/intervention/:id'}
+    http: {verb: 'get', path: '/intervention/:id/geoPoint'}
   });
 
   Image.remoteMethod('getByIntervention', {
@@ -83,7 +83,7 @@ module.exports = function(Image) {
     error.code = 'MODEL_NOT_FOUND';
     cb(error);
   }
-  
+
   Image.remoteMethod('uploadImage', {
     accepts: [
       { arg: 'req', type: 'object', http: { source: 'req' } },
