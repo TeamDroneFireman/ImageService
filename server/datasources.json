@@ -33,5 +33,19 @@
     "database": "mongo-db1",
     "name": "gridfs",
     "connector": "loopback-component-storage-gridfs"
+  },
+  "pushService": {
+    "connector": "rest",
+    "debug": "false",
+    "operations": [{
+      "template": {
+        "method": "POST",
+        "url": "http://localhost:3009/api/pushMessages",
+        "body": "{data}"
+      },
+      "functions": {
+        "create": ["data"]
+      }
+    }]
   }
 }

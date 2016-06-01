@@ -96,4 +96,25 @@ module.exports = function(Image) {
     returns: {type: 'object', root: true},
     http: {verb: 'post', path: '/upload'}
   });
+
+  Image.afterRemote('uploadImage',function (ctx, unused, next) {
+    sendPushMessage(ctx.result, 'Image/Create');
+    next();
+  });
+
+  function sendPushMessage(image,topic){
+    var pushMessage = {
+      idIntervention : image.intervention,
+      idElement : image.id,
+      timestamp : Date.now(),
+      topic : topic
+    };
+    var pushService = Image.app.datasources.pushService;
+    pushService.create(pushMessage, function(err,data){
+      if (err) throw err;
+      if (data.error)
+        next('> response error: ' + err.error.stack);
+    });
+  }
+  
 };

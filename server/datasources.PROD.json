@@ -32,5 +32,28 @@
     "database": "mongo-db1",
     "name": "gridfs",
     "connector": "loopback-component-storage-gridfs"
+  },
+  "pushService": {
+    "connector": "rest",
+    "debug": "false",
+    "operations": [
+      {
+        "template": {
+          "method": "POST",
+          "url": "http://projetm2gla.istic.univ-rennes1.fr/api/pushMessages",
+          "headers": {
+            "accepts": "application/json",
+            "content-type": "application/json",
+            "Host": "push.docker.localhost"
+          },
+          "body": "{data}"
+        },
+        "functions": {
+          "create": [
+            "data"
+          ]
+        }
+      }
+    ]
   }
 }
